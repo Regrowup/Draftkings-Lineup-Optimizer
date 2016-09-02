@@ -59,20 +59,19 @@
 					$tempPlayer->team = $value[5];
 					switch($value[0]){
 						case "DST":
-							$DSTs[$key] = $tempPlayer;
+							$DSTs[count($DSTs)] = $tempPlayer;
 							break;
 						case "QB":
-							$QBs[$key] = $tempPlayer;
-							array_push($QBkeys, $key);
+							$QBs[count($QBs)] = $tempPlayer;
 							break;
 						case "RB":
-							$RBs[$key] = $tempPlayer;
+							$RBs[count($RBs)] = $tempPlayer;
 							break;
 						case "WR":
-							$WRs[$key] = $tempPlayer;
+							$WRs[count($WRs)] = $tempPlayer;
 							break;
 						case "TE";
-							$TEs[$key] = $tempPlayer;
+							$TEs[count($TEs)] = $tempPlayer;
 							break;
 						default:
 							break;
@@ -132,67 +131,44 @@
 					}	
 				}
 				if($elemCount==4){
-					$combinations = array();
-					$firstPlayer = array_shift($playerGroup);
-					$nextGroup = $playerGroup;
-					foreach ($playerGroup as $secondPlayer) {
-						$secondPlayer = array_shift($playerGroup);
-						foreach ($playerGroup as $thirdPlayer) {
-							$thirdPlayer = array_shift($playerGroup);
-							foreach ($playerGroup as $fourthPlayer) {
-								$combo = array();
-								array_push($combo, $firstPlayer);
-								array_push($combo, $secondPlayer);
-								array_push($combo, $thirdPlayer);
-								array_push($combo, $fourthPlayer);
-								//echo var_dump($combo)."<br><br>";
-								echo $firstPlayer->name." - ".$secondPlayer->name." - ".$thirdPlayer->name." - ".$fourthPlayer->name."<br>";
-							}
-						}
-					}
-					if(count($nextGroup)>3){
-						getCombos($nextGroup, 4);
-					}	
-				}
-			}
-
-			$testNumbers = array(1,2,3,4,5,6,7);
-			$TotalCount=0;
-			function combosOfFour($set, &$count){
-				for ($i=0; $i < count($set) ; $i++) { 
-					$firstNumber = $set[$i];
-					for ($j=$i+1; $j < count($set); $j++) { 
-						$secondNumber = $set[$j];
-						for ($k=$j+1; $k <count($set); $k++) { 
-							$thirdNumber = $set[$k];
-							for ($h=$k+1; $h < count($set); $h++) { 
-								$fourthNumber = $set[$h];
-								$count+=1;
-								echo $firstNumber.",".$secondNumber.",".$thirdNumber.",".$fourthNumber."<br>";
+					//echo "WR count: ".count($playerGroup)."<br><br>";
+					for ($i=0; $i < count($playerGroup); $i++) { 
+						$firstPlayer = $playerGroup[$i];
+						//echo var_dump($firstPlayer);
+						for ($j=$i+1; $j < count($playerGroup); $j++) { 
+							$secondPlayer = $playerGroup[$j];
+							for ($k=$j+1; $k < count($playerGroup); $k++) { 
+								$thirdPlayer = $playerGroup[$k];
+								for ($h=$k+1; $h < count($playerGroup); $h++) { 
+									$fourthPlayer = $playerGroup[$h];
+									$combo = array();
+									array_push($combo, $firstPlayer);
+									array_push($combo, $secondPlayer);
+									array_push($combo, $thirdPlayer);
+									array_push($combo, $fourthPlayer);
+									array_push($combos[$cPos], $combo);
+									//echo "<br>".$firstPlayer->name.",".$secondPlayer->name.",".$thirdPlayer->name.",".$fourthPlayer->name."<br>";
+								}
 							}
 						}
 					}
 				}
-			}
-			combosOfFour($testNumbers, $TotalCount);
-			echo "TotalCount: "+$TotalCount;
-			
+			}			
 			//echo "<br><br>QB COMBOS:<br><br>";
-			/////getCombos($QBs, 1, "QB", $combinations);
-			//var_dump($combinations["QB"]);
-			//echo "<br><br>RB COMBOS:<br><br>";
-			////getCombos($RBs, 3, "RB", $combinations);
-			//var_dump($combinations["RB"]);
-			//echo "<br><br>WR COMBOS:<br><br>";
-			////getCombos($WRs, 3, "WR", $combinations);
-			//echo "<br><br>".count($combinations["WR"])."<br><br>";
-			//var_dump($combinations["WR"]);
-			//echo "<br><br>TE COMBOS:<br><br>";
-			////getCombos($TEs, 1, "TE", $combinations);
-			//var_dump($combinations["TE"]);
-			//echo "<br><br>DST COMBOS:<br><br>";
-			/////getCombos($DSTs, 1, "DST", $combinations);
-			//var_dump($combinations["DST"]);
+			getCombos($QBs, 1, "QB", $combinations);
+			var_dump($combinations["QB"]);
+			echo "<br><br>RB COMBOS:<br><br>";
+			getCombos($RBs, 2, "RB", $combinations);
+			var_dump($combinations["RB"]);
+			echo "<br><br>WR COMBOS:<br><br>";
+			getCombos($WRs, 4, "WR", $combinations);
+			var_dump($combinations["WR"]);
+			echo "<br><br>TE COMBOS:<br><br>";
+			getCombos($TEs, 1, "TE", $combinations);
+			var_dump($combinations["TE"]);
+			echo "<br><br>DST COMBOS:<br><br>";
+			getCombos($DSTs, 1, "DST", $combinations);
+			var_dump($combinations["DST"]);
 
 			$totalCombinations = 0;
 			$output="";
@@ -248,7 +224,7 @@
 				$data = $string;
 				fwrite($handle, $data);
 			}
-			//writeFile($output);
+			writeFile($output);
 			//echo $output;
 			//echo "<br><br>Total combinations: "+$totalCombinations;
 			?>
