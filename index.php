@@ -156,32 +156,42 @@
 				}
 			}
 
-			/*$testNumbers = array(1,2,3,4,5,6,7,8,9);
-			function combosOfFour($set){
+			$testNumbers = array(1,2,3,4,5,6,7);
+			$TotalCount=0;
+			function combosOfFour($set, &$count){
 				for ($i=0; $i < count($set) ; $i++) { 
-					$workingSet = $set;
-					$firstNumber = array_shift($workingSet);
-					$secondNumber = array_shift($workingSet);
-					$thirdNumber = array_shift()
+					$firstNumber = $set[$i];
+					for ($j=$i+1; $j < count($set); $j++) { 
+						$secondNumber = $set[$j];
+						for ($k=$j+1; $k <count($set); $k++) { 
+							$thirdNumber = $set[$k];
+							for ($h=$k+1; $h < count($set); $h++) { 
+								$fourthNumber = $set[$h];
+								$count+=1;
+								echo $firstNumber.",".$secondNumber.",".$thirdNumber.",".$fourthNumber."<br>";
+							}
+						}
+					}
 				}
-			}*/
-
+			}
+			combosOfFour($testNumbers, $TotalCount);
+			echo "TotalCount: "+$TotalCount;
 			
 			//echo "<br><br>QB COMBOS:<br><br>";
-			getCombos($QBs, 1, "QB", $combinations);
+			/////getCombos($QBs, 1, "QB", $combinations);
 			//var_dump($combinations["QB"]);
 			//echo "<br><br>RB COMBOS:<br><br>";
-			getCombos($RBs, 3, "RB", $combinations);
+			////getCombos($RBs, 3, "RB", $combinations);
 			//var_dump($combinations["RB"]);
 			//echo "<br><br>WR COMBOS:<br><br>";
-			getCombos($WRs, 3, "WR", $combinations);
+			////getCombos($WRs, 3, "WR", $combinations);
 			//echo "<br><br>".count($combinations["WR"])."<br><br>";
 			//var_dump($combinations["WR"]);
 			//echo "<br><br>TE COMBOS:<br><br>";
-			getCombos($TEs, 1, "TE", $combinations);
+			////getCombos($TEs, 1, "TE", $combinations);
 			//var_dump($combinations["TE"]);
 			//echo "<br><br>DST COMBOS:<br><br>";
-			getCombos($DSTs, 1, "DST", $combinations);
+			/////getCombos($DSTs, 1, "DST", $combinations);
 			//var_dump($combinations["DST"]);
 
 			$totalCombinations = 0;
@@ -238,9 +248,9 @@
 				$data = $string;
 				fwrite($handle, $data);
 			}
-			writeFile($output);
-			echo $output;
-			echo "<br><br>Total combinations: "+$totalCombinations;
+			//writeFile($output);
+			//echo $output;
+			//echo "<br><br>Total combinations: "+$totalCombinations;
 			?>
 		</section>
 	</body>
