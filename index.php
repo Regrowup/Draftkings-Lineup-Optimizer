@@ -154,24 +154,28 @@
 					}
 				}
 			}			
-			//echo "<br><br>QB COMBOS:<br><br>";
+
 			getCombos($QBs, 1, "QB", $combinations);
-			var_dump($combinations["QB"]);
-			echo "<br><br>RB COMBOS:<br><br>";
 			getCombos($RBs, 2, "RB", $combinations);
-			var_dump($combinations["RB"]);
-			echo "<br><br>WR COMBOS:<br><br>";
 			getCombos($WRs, 4, "WR", $combinations);
-			var_dump($combinations["WR"]);
-			echo "<br><br>TE COMBOS:<br><br>";
 			getCombos($TEs, 1, "TE", $combinations);
-			var_dump($combinations["TE"]);
-			echo "<br><br>DST COMBOS:<br><br>";
 			getCombos($DSTs, 1, "DST", $combinations);
-			var_dump($combinations["DST"]);
 
 			$totalCombinations = 0;
 			$output="";
+			$html = "";
+			$html .= '<section>
+									<div>
+										<div class="header-row">
+											<p>Total Salary</p>
+											<p>Projected Point Total</p>
+											<p>QB</p>
+											<p>RBs</p>
+											<p>WRs</p>
+											<p>TEs</p>
+											<p>DST</p>
+										</div>
+									';
 			foreach ($combinations["QB"] as $QBCombo) {
 				foreach ($combinations["RB"] as $RBCombo) {
 					foreach ($combinations["WR"] as $WRCombo) {
@@ -183,41 +187,53 @@
 								foreach ($QBCombo as $QB) {
 									$totalCost+=$QB->salary;
 									$potentialPoints += $QB->ppg;
-									$QBnames.=$QB->name.", ";
+									$QBnames.=$QB->name.",";
 								}
 								$RBnames="";
 								foreach ($RBCombo as $RB) {
 									$totalCost+=$RB->salary;
 									$potentialPoints += $RB->ppg;
-									$RBnames.=$RB->name.", ";
+									$RBnames.=$RB->name.",";
 								}
 								$WRnames="";
 								foreach ($WRCombo as $WR) {
 									$totalCost+=$WR->salary;
 									$potentialPoints += $WR->ppg;
-									$WRnames.=$WR->name.", ";
+									$WRnames.=$WR->name.",";
 								}
 								$TEnames="";
 								foreach ($TECombo as $TE) {
 									$totalCost+=$TE->salary;
 									$potentialPoints += $TE->ppg;
-									$TEnames.=$TE->name.", ";
+									$TEnames.=$TE->name.",";
 								}
 								$DSTnames="";
 								foreach ($DSTCombo as $DST) {
 									$totalCost+=$DST->salary;
 									$potentialPoints += $DST->ppg;
-									$DSTnames.=$DST->name.", ";
+									$DSTnames.=$DST->name.",";
 								}
 								if($totalCost<=50000){
 									$totalCombinations+=1;
-									$output.=$totalCost.",".$potentialPoints.",".$QBnames.",".$RBnames.",".$WRnames.",".$TEnames.",".$DSTnames."\n";
+									$html.="<div>
+														<p>".$totalCost."</p>
+														<p>".$potentialPoints."</p>
+														<p>".rtrim($QBnames, ",")."</p>
+														<p>".rtrim($RBnames, ",")."</p>
+														<p>".rtrim($WRnames, ",")."</p>
+														<p>".rtrim($TEnames, ",")."</p>
+														<p>".rtrim($DSTnames, ",")."</p>
+													</div>";
+									$output.=$totalCost.",".$potentialPoints.",".rtrim($QBnames, ",").",".rtrim($RBnames, ",").",".rtrim($WRnames, ",").",".rtrim($TEnames, ",").",".rtrim($DSTnames, ",")."\n";
 								}
 							}
 						}
 					}
 				}
 			}
+			$html .= "	<div>
+								</section>";
+
 			function writeFile($string){
 				$my_file = 'combinations.csv';
 				$handle = fopen($my_file, 'w');
@@ -225,7 +241,7 @@
 				fwrite($handle, $data);
 			}
 			writeFile($output);
-			//echo $output;
+			echo $html;
 			//echo "<br><br>Total combinations: "+$totalCombinations;
 			?>
 		</section>
