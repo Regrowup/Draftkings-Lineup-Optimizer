@@ -50,12 +50,12 @@
 			foreach ($csv as $key=>$value) {
 				if($key!=0){
 					$tempPlayer = new Player();
-					$tempPlayer->id = $key;
+					$tempPlayer->id = $value[2];
 					$tempPlayer->position = $value[0];
 					$tempPlayer->name = $value[1];
-					$tempPlayer->salary = $value[2];
-					$tempPlayer->gameInfo = $value[3];
-					$tempPlayer->ppg = $value[4];
+					$tempPlayer->salary = $value[3];
+					$tempPlayer->gameInfo = $value[4];
+					$tempPlayer->ppg = $value[6];
 					$tempPlayer->team = $value[5];
 					switch($value[0]){
 						case "DST":
@@ -176,6 +176,7 @@
 											<p>DST</p>
 										</div>
 									';
+			$playerUsage = array();
 			foreach ($combinations["QB"] as $QBCombo) {
 				foreach ($combinations["RB"] as $RBCombo) {
 					foreach ($combinations["WR"] as $WRCombo) {
@@ -184,34 +185,46 @@
 								$totalCost = 0;
 								$potentialPoints = 0;
 								$QBnames="";
+								$QBid="";
+								$QBteam = "";//TODO if no receivers match QB team, then continue;
 								foreach ($QBCombo as $QB) {
 									$totalCost+=$QB->salary;
 									$potentialPoints += $QB->ppg;
 									$QBnames.=$QB->name.",";
+									$QBid.=$QB->id.",";
+									$QBteam = $QB->team;
 								}
 								$RBnames="";
+								$RBid="";
 								foreach ($RBCombo as $RB) {
 									$totalCost+=$RB->salary;
 									$potentialPoints += $RB->ppg;
 									$RBnames.=$RB->name.",";
+									$RBid.=$RB->id.",";
 								}
 								$WRnames="";
+								$WRid="";
 								foreach ($WRCombo as $WR) {
 									$totalCost+=$WR->salary;
 									$potentialPoints += $WR->ppg;
 									$WRnames.=$WR->name.",";
+									$WRid.=$WR->id.",";
 								}
 								$TEnames="";
+								$TEid="";
 								foreach ($TECombo as $TE) {
 									$totalCost+=$TE->salary;
 									$potentialPoints += $TE->ppg;
 									$TEnames.=$TE->name.",";
+									$TEid.=$TE->id.",";
 								}
 								$DSTnames="";
+								$DSTid="";
 								foreach ($DSTCombo as $DST) {
 									$totalCost+=$DST->salary;
 									$potentialPoints += $DST->ppg;
 									$DSTnames.=$DST->name.",";
+									$DSTid.=$DST->id.",";
 								}
 								if($totalCost<=50000){
 									$totalCombinations+=1;
@@ -224,7 +237,7 @@
 														<p>".rtrim($TEnames, ",")."</p>
 														<p>".rtrim($DSTnames, ",")."</p>
 													</div>";
-									$output.=$totalCost.",".$potentialPoints.",".rtrim($QBnames, ",").",".rtrim($RBnames, ",").",".rtrim($WRnames, ",").",".rtrim($TEnames, ",").",".rtrim($DSTnames, ",")."\n";
+									$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
 								}
 							}
 						}
