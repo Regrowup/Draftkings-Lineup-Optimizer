@@ -7,6 +7,8 @@
      -moz-box-sizing: border-box; /* Firexfox */
      -webkit-box-sizing: border-box; /* Safari/Chrome/iOS/Android */
      box-sizing: border-box; /* IE */
+     margin:0;
+     padding:0;
 }
 
 /* Clear fix hack */
@@ -41,7 +43,8 @@ body {
      color: #000;
      font-size: 12px;
      line-height: 1.4;
-     font-family: Helvetica, Arial, sans-serif;
+     font-family: Calibri, Arial, sans-serif;
+     background-color: #f2f2f2;
 }
 
 
@@ -50,13 +53,22 @@ body {
 /*******************************************/
 
 /* Center the container */
-#container {
-	width: 960px;
+.container {
+	width: 1440px;
 	margin: auto;
 }
 
 header {
+     background-color: #368C00;
+     margin:0;
+}
+header h1{
+     color:#f2f2f2;
+     padding:20px;
+}
 
+h2{
+     margin-bottom:20px;
 }
 
 footer {
@@ -70,4 +82,144 @@ article{
 /******************************************
 /* ADDITIONAL STYLES                   
 /*******************************************/
-
+section{
+     padding:20px;
+}
+.final-lineups{
+     padding:20px;
+}
+.header-row{
+     display: flex;
+     flex-direction:row;
+}
+.header-row div{
+     width:14%;
+     display: inline-block;
+     text-align: center;
+     font-size:18px;
+     font-weight:bold;
+     height:100px;
+     font-size:16px;
+}
+.toggle-lineup,.sort-link{
+     font-weight: normal;
+     color:#368C00;
+     text-decoration: underline;
+}
+.sort-link:hover{
+     text-decoration: none;
+}
+.player-list .player{
+     padding:10px 0;
+}
+.player-list .player:not(:last-child){
+     border-bottom: 2px solid white;
+}
+.player-list .player span{
+     font-size: 16px;
+     font-weight:bold;
+     display: inline-block;
+}
+.player-list .player.header span{
+     text-decoration: underline;
+}
+.player-list .player span:nth-child(1){
+     width:100px;
+}
+.player-list .player span:nth-child(2){
+     width:250px;
+}
+.player-list .player span:nth-child(3){
+     width:75px;
+     text-align: center;
+}
+.player-list .player span:nth-child(4){
+     width:100px;
+     text-align: center;
+}
+.player-list .player span:nth-child(5){
+     width:250px;
+     text-align: center;
+}
+.player-list .player span:nth-child(6){
+     width:75px;
+     text-align: center;
+}
+.player-list .player span:nth-child(7){
+     width:120px;
+     text-align: center;
+}
+.player-list .player span:nth-child(8){
+     width:75px;
+     text-align: center;
+}
+.build-csv{
+     padding:15px;
+     text-align: center;
+}
+.build-csv input{
+     text-align: center;
+     padding:3px;
+     margin-right:10px;
+     font-size: 18px;
+} 
+.build-csv span{
+     padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    background: orange;
+    color: #f2f2f2;
+}
+.available-lineups{
+     padding:20px;
+}
+.lineup-list{
+     border: 3px solid white;
+}
+.lineup-list.in-use{
+     height:600px;
+     width:100%;
+     overflow: scroll;
+} 
+.lineup{
+     display: flex;
+     flex-direction:row;
+}
+.lineup div{
+     width:14%;
+     font-size:16px;
+     text-align: center;
+     border-bottom: 2px solid white;
+     padding:20px;
+}
+.lineup div:nth-child(1){
+     width:7.5%;
+}
+.lineup div:nth-child(2){
+     width:7.5%;
+}
+.lineup div:nth-child(3){
+     width:7.5%;
+}
+.lineup div:nth-child(4){
+     width:7.5%;
+}
+.lineup div:nth-child(5){
+     width:15%;
+}
+.lineup div:nth-child(6){
+     width:15%;
+}
+.lineup div:nth-child(7){
+     width:15%;
+}
+.lineup div:nth-child(8){
+     width:15%;
+}
+.lineup div:not(:last-child){
+     border-right: 2px solid white;
+}

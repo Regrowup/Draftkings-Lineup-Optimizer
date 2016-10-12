@@ -5,18 +5,14 @@
     	<meta name="description" content="Enter Site Description">
 
 		<!-- external CSS link -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/main.js"></script>
-		<style type="text/css">
-			p{
-				width:150px;
-				display:inline-block;
-				padding:5px 10px;
-				text-align: center;
-			}
-		</style>
 	</head>
 	<body>
+		<header class="container">
+			<h1>Draftkings NFL Lineup Creator</h1>
+		</header>
 		<section class="container">
 			<?php
 			$csv = array_map('str_getcsv', file('csv/DKSalaries.csv'));
@@ -37,7 +33,6 @@
 				public $team;
 			}
 			class Lineup{
-				public $totalValue;
 				public $qb;
 				public $rb1;
 				public $rb2;
@@ -47,37 +42,65 @@
 				public $flex;
 				public $dst;
 			}
-			foreach ($csv as $key=>$value) {
-				if($key!=0){
-					$tempPlayer = new Player();
-					$tempPlayer->id = $value[2];
-					$tempPlayer->position = $value[0];
-					$tempPlayer->name = $value[1];
-					$tempPlayer->salary = $value[3];
-					$tempPlayer->gameInfo = $value[4];
-					$tempPlayer->ppg = $value[6];
-					$tempPlayer->team = $value[5];
-					switch($value[0]){
-						case "DST":
-							$DSTs[count($DSTs)] = $tempPlayer;
-							break;
-						case "QB":
-							$QBs[count($QBs)] = $tempPlayer;
-							break;
-						case "RB":
-							$RBs[count($RBs)] = $tempPlayer;
-							break;
-						case "WR":
-							$WRs[count($WRs)] = $tempPlayer;
-							break;
-						case "TE";
-							$TEs[count($TEs)] = $tempPlayer;
-							break;
-						default:
-							break;
-					}
-				}
-			}
+			$html.=('<section class="player-list">
+								<h2>Player List:</h2>
+								<div class="players">
+									<div class="player header">
+										<span>Position</span>
+										<span>Name</span>
+										<span>Team</span>
+										<span>Cost</span>
+										<span>Matchup</span>
+										<span>PPT</span>
+										<span>Available In:</span>
+										<span>Used In:</span>
+									</div>');
+								foreach ($csv as $key=>$value) {
+									if($key!=0){
+										$tempPlayer = new Player();
+										$tempPlayer->id = $value[2];
+										$tempPlayer->position = $value[0];
+										$tempPlayer->name = $value[1];
+										$tempPlayer->salary = $value[3];
+										$tempPlayer->gameInfo = $value[4];
+										$tempPlayer->team = $value[5];
+										$tempPlayer->ppg = $value[6];
+										switch($value[0]){
+											case "DST":
+												$DSTs[count($DSTs)] = $tempPlayer;
+												break;
+											case "QB":
+												$QBs[count($QBs)] = $tempPlayer;
+												break;
+											case "RB":
+												$RBs[count($RBs)] = $tempPlayer;
+												break;
+											case "WR":
+												$WRs[count($WRs)] = $tempPlayer;
+												break;
+											case "TE";
+												$TEs[count($TEs)] = $tempPlayer;
+												break;
+											default:
+												break;
+										}
+
+									$html.=('<div data-id="'.$tempPlayer->id.'" class="player">
+														<span data-pposition="'.$tempPlayer->position.'">'.$tempPlayer->position.'</span>
+														<span data-pname="'.$tempPlayer->name.'">'.$tempPlayer->name.'</span>
+														<span data-pteam="'.$tempPlayer->team.'">'.$tempPlayer->team.'</span>
+														<span data-psalary="'.$tempPlayer->salary.'">'.$tempPlayer->salary.'</span>
+														<span data-pinfo="'.$tempPlayer->gameInfo.'">'.$tempPlayer->gameInfo.'</span>
+														<span data-pppt="'.$tempPlayer->ppg.'">'.$tempPlayer->ppg.'</span>
+														<span data-availIn="">0</span>
+														<span data-usedIn="">0</span>
+													</div>');
+
+												
+									}
+								}
+			$html.=('	</div>
+							</section>');
 			$players["QB"] = $QBs;
 			$players["RB"] = $RBs;
 			$players["WR"] = $WRs;
@@ -96,7 +119,6 @@
 						$combo = array();
 						array_push($combo, $player);
 						array_push($combos[$cPos], $combo);
-						//echo $player->name."<br>";
 					}
 				}
 				if($elemCount==2){
@@ -106,7 +128,6 @@
 						array_push($combo, $currentPlayer);
 						array_push($combo, $player);
 						array_push($combos[$cPos], $combo);
-						//echo $currentPlayer->name." - ".$player->name."<br>";
 					}
 					if(count($playerGroup)>1){
 						getCombos($playerGroup, 2, $cPos, $combos);
@@ -123,7 +144,6 @@
 							array_push($combo, $secondPlayer);
 							array_push($combo, $thirdPlayer);
 							array_push($combos[$cPos], $combo);
-							//echo $firstPlayer->name." - ".$secondPlayer->name." - ".$thirdPlayer->name."<br>";
 						}
 					}
 					if(count($nextGroup)>2){
@@ -131,10 +151,8 @@
 					}	
 				}
 				if($elemCount==4){
-					//echo "WR count: ".count($playerGroup)."<br><br>";
 					for ($i=0; $i < count($playerGroup); $i++) { 
 						$firstPlayer = $playerGroup[$i];
-						//echo var_dump($firstPlayer);
 						for ($j=$i+1; $j < count($playerGroup); $j++) { 
 							$secondPlayer = $playerGroup[$j];
 							for ($k=$j+1; $k < count($playerGroup); $k++) { 
@@ -147,7 +165,6 @@
 									array_push($combo, $thirdPlayer);
 									array_push($combo, $fourthPlayer);
 									array_push($combos[$cPos], $combo);
-									//echo "<br>".$firstPlayer->name.",".$secondPlayer->name.",".$thirdPlayer->name.",".$fourthPlayer->name."<br>";
 								}
 							}
 						}
@@ -155,29 +172,52 @@
 				}
 			}			
 
-			getCombos($QBs, 1, "QB", $combinations);
-			getCombos($RBs, 2, "RB", $combinations);
-			getCombos($WRs, 4, "WR", $combinations);
-			getCombos($TEs, 1, "TE", $combinations);
-			getCombos($DSTs, 1, "DST", $combinations);
+			$qbColors = array('blue', 'green', 'red');
 
 			$totalCombinations = 0;
 			$output="";
-			$html = "";
-			$html .= '<section>
-									<div>
-										<div class="header-row">
-											<p>Total Salary</p>
-											<p>Projected Point Total</p>
-											<p>QB</p>
-											<p>RBs</p>
-											<p>WRs</p>
-											<p>TEs</p>
-											<p>DST</p>
+			$html .= '<section class="final-lineups">
+									<h2>In Use: <span class="inUseCount"></span></h2>
+									<div class="lineup-list in-use">
+										<div class="lineup header-row">
+											<div class="index">#</div>
+											<div class="move">Remove Lineup</div>
+											<div class="salary">Total Salary</div>
+											<div class="points">PPT</div>
+											<div class="qbs">QB</div>
+											<div class="rbs">RBs</div>
+											<div class="wrs">WRs</div>
+											<div class="tes">TEs</div>
+											<div class="dsts">DST</div>
+										</div>
+									</div>
+								</div>
+								<div class="build-csv"><span>Build Draftkings CSV</span></div>
+							</section>';
+			$html .= '<section class="available-lineups">
+									<h2>Available: <span class="availLineupCount"></span></h2>
+									<div class="lineup-list">
+										<div class="lineup header-row">
+											<div class="index">#</div>
+											<div class="move">Add Lineup</div>
+											<div class="salary">Total Salary</div>
+											<div class="points">PPT<br><span class="sort-link available">SORT</span></div>
+											<div class="qbs">QB</div>
+											<div class="rbs">RBs</div>
+											<div class="wrs">WRs</div>
+											<div class="tes">TEs</div>
+											<div class="dsts">DST</div>
 										</div>
 									';
 			$playerUsage = array();
-			foreach ($combinations["QB"] as $QBCombo) {
+
+			getCombos($QBs, 1, "QB", $combinations);
+			getCombos($RBs, 2, "RB", $combinations);
+			getCombos($WRs, 3, "WR", $combinations);
+			getCombos($TEs, 2, "TE", $combinations);
+			getCombos($DSTs, 1, "DST", $combinations);
+			
+			foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
 				foreach ($combinations["RB"] as $RBCombo) {
 					foreach ($combinations["WR"] as $WRCombo) {
 						foreach ($combinations["TE"] as $TECombo) {
@@ -187,56 +227,71 @@
 								$QBnames="";
 								$QBid="";
 								$QBteam = "";//TODO if no receivers match QB team, then continue;
-								foreach ($QBCombo as $QB) {
+								foreach ($QBCombo as $key=>$QB) {
 									$totalCost+=$QB->salary;
 									$potentialPoints += $QB->ppg;
-									$QBnames.=$QB->name.",";
+									$QBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$QB->id.'">'.$QB->name."</span><br>";
 									$QBid.=$QB->id.",";
 									$QBteam = $QB->team;
 								}
 								$RBnames="";
 								$RBid="";
-								foreach ($RBCombo as $RB) {
+								foreach ($RBCombo as $key=>$RB) {
+									if($RB->team==$QBteam){
+										$RBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+									}else{
+										$RBnames.='<span class="player" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+									}
 									$totalCost+=$RB->salary;
 									$potentialPoints += $RB->ppg;
-									$RBnames.=$RB->name.",";
+									
 									$RBid.=$RB->id.",";
 								}
 								$WRnames="";
 								$WRid="";
-								foreach ($WRCombo as $WR) {
+								foreach ($WRCombo as $key=>$WR) {
+									if($WR->team==$QBteam){
+										$WRnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+									}else{
+										$WRnames.='<span class="player" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+									}
 									$totalCost+=$WR->salary;
 									$potentialPoints += $WR->ppg;
-									$WRnames.=$WR->name.",";
 									$WRid.=$WR->id.",";
 								}
 								$TEnames="";
 								$TEid="";
-								foreach ($TECombo as $TE) {
+								foreach ($TECombo as $key=>$TE) {
+									if($TE->team==$QBteam){
+										$TEnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+									}else{
+										$TEnames.='<span class="player" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+									}
 									$totalCost+=$TE->salary;
 									$potentialPoints += $TE->ppg;
-									$TEnames.=$TE->name.",";
 									$TEid.=$TE->id.",";
 								}
 								$DSTnames="";
 								$DSTid="";
-								foreach ($DSTCombo as $DST) {
+								foreach ($DSTCombo as $key=>$DST) {
 									$totalCost+=$DST->salary;
 									$potentialPoints += $DST->ppg;
-									$DSTnames.=$DST->name.",";
+									$DSTnames.='<span class="player" data-id="'.$DST->id.'">'.$DST->name."</span><br>";
 									$DSTid.=$DST->id.",";
 								}
 								if($totalCost<=50000){
 									$totalCombinations+=1;
-									$html.="<div>
-														<p>".$totalCost."</p>
-														<p>".$potentialPoints."</p>
-														<p>".rtrim($QBnames, ",")."</p>
-														<p>".rtrim($RBnames, ",")."</p>
-														<p>".rtrim($WRnames, ",")."</p>
-														<p>".rtrim($TEnames, ",")."</p>
-														<p>".rtrim($DSTnames, ",")."</p>
-													</div>";
+									$html.='<div class="lineup" data-inuse="false">
+														<div class="index">#</div>
+														<div class="move"><span class="toggle-lineup">ADD</span></div>
+														<div class="salary">'.$totalCost.'</div>
+														<div class="points">'.$potentialPoints.'</div>
+														<div class="qbs">'.rtrim($QBnames, ",").'</div>
+														<div class="rbs">'.rtrim($RBnames, ",").'</div>
+														<div class="wrs">'.rtrim($WRnames, ",").'</div>
+														<div class="tes">'.rtrim($TEnames, ",").'</div>
+														<div class="dst">'.rtrim($DSTnames, ",").'</div>
+													</div>';
 									$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
 								}
 							}
@@ -253,9 +308,7 @@
 				$data = $string;
 				fwrite($handle, $data);
 			}
-			writeFile($output);
 			echo $html;
-			//echo "<br><br>Total combinations: "+$totalCombinations;
 			?>
 		</section>
 	</body>
