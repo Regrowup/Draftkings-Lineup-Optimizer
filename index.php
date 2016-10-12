@@ -172,7 +172,7 @@
 				}
 			}			
 
-			$qbColors = array('blue', 'green', 'red');
+			$qbColors = array('blue', 'orange', 'red');
 
 			$totalCombinations = 0;
 			$output="";
@@ -191,11 +191,15 @@
 											<div class="dsts">DST</div>
 										</div>
 									</div>
-								</div>
-								<div class="build-csv"><span>Build Draftkings CSV</span></div>
-							</section>';
+									<div class="build-csv"><span>Build Draftkings CSV</span></div>
+								</section>';
 			$html .= '<section class="available-lineups">
 									<h2>Available: <span class="availLineupCount"></span></h2>
+									<div class="sort-fields">
+										<ul>Position:
+											<li></li>
+										</ul>
+									</div>
 									<div class="lineup-list">
 										<div class="lineup header-row">
 											<div class="index">#</div>
@@ -213,15 +217,17 @@
 
 			getCombos($QBs, 1, "QB", $combinations);
 			getCombos($RBs, 2, "RB", $combinations);
-			getCombos($WRs, 3, "WR", $combinations);
-			getCombos($TEs, 2, "TE", $combinations);
+			getCombos($WRs, 4, "WR", $combinations);
+			getCombos($TEs, 1, "TE", $combinations);
 			getCombos($DSTs, 1, "DST", $combinations);
-			
+
+			$comboCount = 0;
 			foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
 				foreach ($combinations["RB"] as $RBCombo) {
 					foreach ($combinations["WR"] as $WRCombo) {
 						foreach ($combinations["TE"] as $TECombo) {
 							foreach ($combinations["DST"] as $DSTCombo) {
+								$comboCount+=1;
 								$totalCost = 0;
 								$potentialPoints = 0;
 								$QBnames="";
@@ -259,6 +265,9 @@
 									$potentialPoints += $WR->ppg;
 									$WRid.=$WR->id.",";
 								}
+								if($totalCost>50000){
+									continue;
+								}
 								$TEnames="";
 								$TEid="";
 								foreach ($TECombo as $key=>$TE) {
@@ -271,6 +280,9 @@
 									$potentialPoints += $TE->ppg;
 									$TEid.=$TE->id.",";
 								}
+								if($totalCost>50000){
+									continue;
+								}
 								$DSTnames="";
 								$DSTid="";
 								foreach ($DSTCombo as $key=>$DST) {
@@ -282,7 +294,7 @@
 								if($totalCost<=50000){
 									$totalCombinations+=1;
 									$html.='<div class="lineup" data-inuse="false">
-														<div class="index">#</div>
+														<div class="index">'.$comboCount.'</div>
 														<div class="move"><span class="toggle-lineup">ADD</span></div>
 														<div class="salary">'.$totalCost.'</div>
 														<div class="points">'.$potentialPoints.'</div>

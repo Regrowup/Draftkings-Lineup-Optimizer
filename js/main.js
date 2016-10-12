@@ -13,7 +13,6 @@ $(document).ready(function(){
 			updateUsedCount();
 			updatePlayerUsage(aLineup, true);
 		}else{
-			console.log('Remove Lineup');
 			$(aLineup).attr('data-inuse', 'false');
 			$(this).text('ADD');
 			$('.available-lineups .lineup-list').append(aLineup);

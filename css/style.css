@@ -105,6 +105,7 @@ section{
      font-weight: normal;
      color:#368C00;
      text-decoration: underline;
+     cursor:pointer;
 }
 .sort-link:hover{
      text-decoration: none;
