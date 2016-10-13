@@ -195,16 +195,21 @@
 								</section>';
 			$html .= '<section class="available-lineups">
 									<h2>Available: <span class="availLineupCount"></span></h2>
+									<p>*Use , between multiple players at the same position</p>
 									<div class="sort-fields">
-										<ul>Position:
-											<li></li>
-										</ul>
+										<div><span>QB:</span><input name="qb-filter" class="qb-filter" type="text"></div>
+										<div><span>RB:</span><input name="rb-filter" class="rb-filter" type="text"></div>
+										<div><span>WR:</span><input name="wr-filter" class="wr-filter" type="text"></div>
+										<div><span>TE:</span><input name="te-filter" class="te-filter" type="text"></div>
+										<div><span>DST:</span><input name="dst-filter" class="dst-filter" type="text"></div>
+										<div class="filter-button">Filter</div>
+										<div class="clear-button">Clear</div>
 									</div>
 									<div class="lineup-list">
 										<div class="lineup header-row">
 											<div class="index">#</div>
 											<div class="move">Add Lineup</div>
-											<div class="salary">Total Salary</div>
+											<div class="salary">Total Salary<br><span class="sort-link available">SORT</span></div>
 											<div class="points">PPT<br><span class="sort-link available">SORT</span></div>
 											<div class="qbs">QB</div>
 											<div class="rbs">RBs</div>
@@ -216,8 +221,8 @@
 			$playerUsage = array();
 
 			getCombos($QBs, 1, "QB", $combinations);
-			getCombos($RBs, 2, "RB", $combinations);
-			getCombos($WRs, 4, "WR", $combinations);
+			getCombos($RBs, 3, "RB", $combinations);
+			getCombos($WRs, 3, "WR", $combinations);
 			getCombos($TEs, 1, "TE", $combinations);
 			getCombos($DSTs, 1, "DST", $combinations);
 

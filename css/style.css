@@ -175,8 +175,48 @@ section{
     background: orange;
     color: #f2f2f2;
 }
+.sort-fields{
+     margin-bottom:10px;
+}
+.sort-fields div{
+     display: inline-block;
+     font-size:18px;
+     margin-right:15px;
+}
+.sort-fields span{
+     margin-right:10px;
+}
+.sort-fields input{
+     float:right;
+     display:block;
+     padding:7px;
+     font-size:14px;
+     position: relative;
+     top:-5px;
+}
+.sort-fields input:focus{
+     outline:none;
+}
+.sort-fields .filter-button{
+     padding:5px;
+     background-color: blue;
+     color:#f2f2f2;
+     padding:7px 20px;
+     border-radius: 5px;
+}
+.sort-fields .clear-button{
+     padding:5px;
+     background-color: #bdbdbd;
+     color:white;
+     padding:7px 20px;
+     border-radius: 5px;
+}
 .available-lineups{
      padding:20px;
+}
+.available-lineups p{
+     font-size:16px;
+     margin-bottom:10px;
 }
 .lineup-list{
      border: 3px solid white;

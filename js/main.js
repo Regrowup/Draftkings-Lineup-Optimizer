@@ -114,9 +114,112 @@ $(document).ready(function(){
 		});
 	}
 
-	$('.sort-link.available').on('click', function () {
+	function filterAvailableLineups(){
+		var qbField = $('.qb-filter').val();
+		var rbField = $('.rb-filter').val();
+		var wrField = $('.wr-filter').val();
+		var teField = $('.te-filter').val();
+		var dstField = $('.dst-filter').val();
+
+		var qbs = qbField.split(",");
+		var rbs = rbField.split(",");
+		var wrs = wrField.split(",");
+		var tes = teField.split(",");
+		var dst = dstField.split(",");
+
+		$('.available-lineups .lineup:not(:first-child)').each(function(index, el) {
+
+			var bShowLineup = true;
+
+			for (var i = 0; i < qbs.length; i++) {
+				var bContainsQb = false;
+				$(el).find('.qbs span.player').each(function(pIndex, player) {
+					var pName = $(player).text();
+					if(pName.indexOf(qbs[i]) !== -1){
+						bContainsQb = true;
+					}
+				});
+				if(!bContainsQb){
+					bShowLineup = false;
+				}
+			};
+			for (var i = 0; i < 1; i++) {
+				var bContainsRb = false;
+				$(el).find('.rbs span.player').each(function(pIndex, player) {
+					var pName = $(player).text();
+					if(pName.indexOf(rbs[i]) !== -1){
+						bContainsRb = true;
+					}
+				});
+				if(!bContainsRb){
+					bShowLineup = false;
+				}
+			};
+			for (var i = 0; i < 1; i++) {
+				var bContainsWr = false;
+				$(el).find('.wrs span.player').each(function(pIndex, player) {
+					var pName = $(player).text();
+					if(pName.indexOf(wrs[i]) !== -1){
+						bContainsWr = true;
+					}
+				});
+				if(!bContainsWr){
+					bShowLineup = false;
+				}
+			};
+			for (var i = 0; i < tes.length; i++) {
+				var bContainsTe = false;
+				$(el).find('.tes span.player').each(function(pIndex, player) {
+					var pName = $(player).text();
+					if(pName.indexOf(tes[i]) !== -1){
+						bContainsTe = true;
+					}
+				});
+				if(!bContainsTe){
+					bShowLineup = false;
+				}
+			};
+			for (var i = 0; i < dst.length; i++) {
+				var bContainsDst = false;
+				$(el).find('.dst span.player').each(function(pIndex, player) {
+					var pName = $(player).text();
+					if(pName.indexOf(dst[i]) !== -1){
+						bContainsDst = true;
+					}
+				});
+				if(!bContainsDst){
+					bShowLineup = false;
+				}
+			};
+
+			if(bShowLineup){
+				$(el).show();
+			}else{
+				$(el).hide();
+			}
+
+		});
+	}
+
+	$('.filter-button').on('click', function(){
+		filterAvailableLineups();
+	});
+
+	$('.clear-button').on('click', function(){
+		$('.available-lineups .lineup').each(function(index, el) {
+			$(el).show();
+		});
+	});
+
+	$('.points .sort-link.available').on('click', function () {
 		$('.available-lineups .lineup:not(.header-row)').sort(function(a, b) {
 		    return -$(a).find(".points").text() - -$(b).find(".points").text();
+		})
+		.appendTo($('.available-lineups .lineup-list'));
+	});
+	$('.salary .sort-link.available').on('click', function () {
+		$('.available-lineups .lineup:not(.header-row)').sort(function(a, b) {
+		    return -$(a).find(".salary").text() - -$(b).find(".salary").text();
 		})
 		.appendTo($('.available-lineups .lineup-list'));
 	});
