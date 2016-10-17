@@ -11,6 +11,8 @@
 	</head>
 	<body>
 		<header class="container">
+			<div class="build-csv"><span>GO!</span></div>
+			<div>Lineups In Use: <span class="inUseCount">0</span></div>
 			<h1>Draftkings NFL Lineup Creator</h1>
 		</header>
 		<section class="container">
@@ -191,11 +193,9 @@
 											<div class="dsts">DST</div>
 										</div>
 									</div>
-									<div class="build-csv"><span>Build Draftkings CSV</span></div>
 								</section>';
 			$html .= '<section class="available-lineups">
 									<h2>Available: <span class="availLineupCount"></span></h2>
-									<p>*Use , between multiple players at the same position</p>
 									<div class="sort-fields">
 										<div><span>QB:</span><input name="qb-filter" class="qb-filter" type="text"></div>
 										<div><span>RB:</span><input name="rb-filter" class="rb-filter" type="text"></div>
@@ -220,102 +220,313 @@
 									';
 			$playerUsage = array();
 
-			getCombos($QBs, 1, "QB", $combinations);
-			getCombos($RBs, 3, "RB", $combinations);
-			getCombos($WRs, 3, "WR", $combinations);
-			getCombos($TEs, 1, "TE", $combinations);
-			getCombos($DSTs, 1, "DST", $combinations);
+			{
+				getCombos($QBs, 1, "QB", $combinations);
+				getCombos($RBs, 2, "RB", $combinations);
+				getCombos($WRs, 4, "WR", $combinations);
+				getCombos($TEs, 1, "TE", $combinations);
+				getCombos($DSTs, 1, "DST", $combinations);
 
-			$comboCount = 0;
-			foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
-				foreach ($combinations["RB"] as $RBCombo) {
-					foreach ($combinations["WR"] as $WRCombo) {
-						foreach ($combinations["TE"] as $TECombo) {
-							foreach ($combinations["DST"] as $DSTCombo) {
-								$comboCount+=1;
-								$totalCost = 0;
-								$potentialPoints = 0;
-								$QBnames="";
-								$QBid="";
-								$QBteam = "";//TODO if no receivers match QB team, then continue;
-								foreach ($QBCombo as $key=>$QB) {
-									$totalCost+=$QB->salary;
-									$potentialPoints += $QB->ppg;
-									$QBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$QB->id.'">'.$QB->name."</span><br>";
-									$QBid.=$QB->id.",";
-									$QBteam = $QB->team;
-								}
-								$RBnames="";
-								$RBid="";
-								foreach ($RBCombo as $key=>$RB) {
-									if($RB->team==$QBteam){
-										$RBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
-									}else{
-										$RBnames.='<span class="player" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+				$comboCount = 0;
+				foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
+					foreach ($combinations["RB"] as $RBCombo) {
+						foreach ($combinations["WR"] as $WRCombo) {
+							foreach ($combinations["TE"] as $TECombo) {
+								foreach ($combinations["DST"] as $DSTCombo) {
+									$comboCount+=1;
+									$totalCost = 0;
+									$potentialPoints = 0;
+									$QBnames="";
+									$QBid="";
+									$QBteam = "";//TODO if no receivers match QB team, then continue;
+									foreach ($QBCombo as $key=>$QB) {
+										$totalCost+=$QB->salary;
+										$potentialPoints += $QB->ppg;
+										$QBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$QB->id.'">'.$QB->name."</span><br>";
+										$QBid.=$QB->id.",";
+										$QBteam = $QB->team;
 									}
-									$totalCost+=$RB->salary;
-									$potentialPoints += $RB->ppg;
-									
-									$RBid.=$RB->id.",";
-								}
-								$WRnames="";
-								$WRid="";
-								foreach ($WRCombo as $key=>$WR) {
-									if($WR->team==$QBteam){
-										$WRnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
-									}else{
-										$WRnames.='<span class="player" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+									$RBnames="";
+									$RBid="";
+									foreach ($RBCombo as $key=>$RB) {
+										if($RB->team==$QBteam){
+											$RBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}else{
+											$RBnames.='<span class="player" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}
+										$totalCost+=$RB->salary;
+										$potentialPoints += $RB->ppg;
+										
+										$RBid.=$RB->id.",";
 									}
-									$totalCost+=$WR->salary;
-									$potentialPoints += $WR->ppg;
-									$WRid.=$WR->id.",";
-								}
-								if($totalCost>50000){
-									continue;
-								}
-								$TEnames="";
-								$TEid="";
-								foreach ($TECombo as $key=>$TE) {
-									if($TE->team==$QBteam){
-										$TEnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
-									}else{
-										$TEnames.='<span class="player" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+									$WRnames="";
+									$WRid="";
+									foreach ($WRCombo as $key=>$WR) {
+										if($WR->team==$QBteam){
+											$WRnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}else{
+											$WRnames.='<span class="player" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}
+										$totalCost+=$WR->salary;
+										$potentialPoints += $WR->ppg;
+										$WRid.=$WR->id.",";
 									}
-									$totalCost+=$TE->salary;
-									$potentialPoints += $TE->ppg;
-									$TEid.=$TE->id.",";
-								}
-								if($totalCost>50000){
-									continue;
-								}
-								$DSTnames="";
-								$DSTid="";
-								foreach ($DSTCombo as $key=>$DST) {
-									$totalCost+=$DST->salary;
-									$potentialPoints += $DST->ppg;
-									$DSTnames.='<span class="player" data-id="'.$DST->id.'">'.$DST->name."</span><br>";
-									$DSTid.=$DST->id.",";
-								}
-								if($totalCost<=50000){
-									$totalCombinations+=1;
-									$html.='<div class="lineup" data-inuse="false">
-														<div class="index">'.$comboCount.'</div>
-														<div class="move"><span class="toggle-lineup">ADD</span></div>
-														<div class="salary">'.$totalCost.'</div>
-														<div class="points">'.$potentialPoints.'</div>
-														<div class="qbs">'.rtrim($QBnames, ",").'</div>
-														<div class="rbs">'.rtrim($RBnames, ",").'</div>
-														<div class="wrs">'.rtrim($WRnames, ",").'</div>
-														<div class="tes">'.rtrim($TEnames, ",").'</div>
-														<div class="dst">'.rtrim($DSTnames, ",").'</div>
-													</div>';
-									$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
+									if($totalCost>50000){
+										continue;
+									}
+									$TEnames="";
+									$TEid="";
+									foreach ($TECombo as $key=>$TE) {
+										if($TE->team==$QBteam){
+											$TEnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}else{
+											$TEnames.='<span class="player" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}
+										$totalCost+=$TE->salary;
+										$potentialPoints += $TE->ppg;
+										$TEid.=$TE->id.",";
+									}
+									if($totalCost>50000){
+										continue;
+									}
+									$DSTnames="";
+									$DSTid="";
+									foreach ($DSTCombo as $key=>$DST) {
+										$totalCost+=$DST->salary;
+										$potentialPoints += $DST->ppg;
+										$DSTnames.='<span class="player" data-id="'.$DST->id.'">'.$DST->name."</span><br>";
+										$DSTid.=$DST->id.",";
+									}
+									if($totalCost<=50000){
+										$totalCombinations+=1;
+										$html.='<div class="lineup" data-inuse="false">
+															<div class="index">'.$comboCount.'</div>
+															<div class="move"><span class="toggle-lineup">ADD</span></div>
+															<div class="salary">'.$totalCost.'</div>
+															<div class="points">'.$potentialPoints.'</div>
+															<div class="qbs">'.rtrim($QBnames, ",").'</div>
+															<div class="rbs">'.rtrim($RBnames, ",").'</div>
+															<div class="wrs">'.rtrim($WRnames, ",").'</div>
+															<div class="tes">'.rtrim($TEnames, ",").'</div>
+															<div class="dst">'.rtrim($DSTnames, ",").'</div>
+														</div>';
+										$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+			$combinations = array();
+			$combinations["QB"] = array();
+			$combinations["RB"] = array();
+			$combinations["WR"] = array();
+			$combinations["TE"] = array();
+			$combinations["DST"] = array();
+			{
+				getCombos($QBs, 1, "QB", $combinations);
+				getCombos($RBs, 3, "RB", $combinations);
+				getCombos($WRs, 3, "WR", $combinations);
+				getCombos($TEs, 1, "TE", $combinations);
+				getCombos($DSTs, 1, "DST", $combinations);
+
+				$comboCount = 0;
+				foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
+					foreach ($combinations["RB"] as $RBCombo) {
+						foreach ($combinations["WR"] as $WRCombo) {
+							foreach ($combinations["TE"] as $TECombo) {
+								foreach ($combinations["DST"] as $DSTCombo) {
+									$comboCount+=1;
+									$totalCost = 0;
+									$potentialPoints = 0;
+									$QBnames="";
+									$QBid="";
+									$QBteam = "";//TODO if no receivers match QB team, then continue;
+									foreach ($QBCombo as $key=>$QB) {
+										$totalCost+=$QB->salary;
+										$potentialPoints += $QB->ppg;
+										$QBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$QB->id.'">'.$QB->name."</span><br>";
+										$QBid.=$QB->id.",";
+										$QBteam = $QB->team;
+									}
+									$RBnames="";
+									$RBid="";
+									foreach ($RBCombo as $key=>$RB) {
+										if($RB->team==$QBteam){
+											$RBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}else{
+											$RBnames.='<span class="player" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}
+										$totalCost+=$RB->salary;
+										$potentialPoints += $RB->ppg;
+										
+										$RBid.=$RB->id.",";
+									}
+									$WRnames="";
+									$WRid="";
+									foreach ($WRCombo as $key=>$WR) {
+										if($WR->team==$QBteam){
+											$WRnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}else{
+											$WRnames.='<span class="player" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}
+										$totalCost+=$WR->salary;
+										$potentialPoints += $WR->ppg;
+										$WRid.=$WR->id.",";
+									}
+									if($totalCost>50000){
+										continue;
+									}
+									$TEnames="";
+									$TEid="";
+									foreach ($TECombo as $key=>$TE) {
+										if($TE->team==$QBteam){
+											$TEnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}else{
+											$TEnames.='<span class="player" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}
+										$totalCost+=$TE->salary;
+										$potentialPoints += $TE->ppg;
+										$TEid.=$TE->id.",";
+									}
+									if($totalCost>50000){
+										continue;
+									}
+									$DSTnames="";
+									$DSTid="";
+									foreach ($DSTCombo as $key=>$DST) {
+										$totalCost+=$DST->salary;
+										$potentialPoints += $DST->ppg;
+										$DSTnames.='<span class="player" data-id="'.$DST->id.'">'.$DST->name."</span><br>";
+										$DSTid.=$DST->id.",";
+									}
+									if($totalCost<=50000){
+										$totalCombinations+=1;
+										$html.='<div class="lineup" data-inuse="false">
+															<div class="index">'.$comboCount.'</div>
+															<div class="move"><span class="toggle-lineup">ADD</span></div>
+															<div class="salary">'.$totalCost.'</div>
+															<div class="points">'.$potentialPoints.'</div>
+															<div class="qbs">'.rtrim($QBnames, ",").'</div>
+															<div class="rbs">'.rtrim($RBnames, ",").'</div>
+															<div class="wrs">'.rtrim($WRnames, ",").'</div>
+															<div class="tes">'.rtrim($TEnames, ",").'</div>
+															<div class="dst">'.rtrim($DSTnames, ",").'</div>
+														</div>';
+										$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			$combinations = array();
+			$combinations["QB"] = array();
+			$combinations["RB"] = array();
+			$combinations["WR"] = array();
+			$combinations["TE"] = array();
+			$combinations["DST"] = array();
+			{
+				getCombos($QBs, 1, "QB", $combinations);
+				getCombos($RBs, 2, "RB", $combinations);
+				getCombos($WRs, 3, "WR", $combinations);
+				getCombos($TEs, 2, "TE", $combinations);
+				getCombos($DSTs, 1, "DST", $combinations);
+
+				$comboCount = 0;
+				foreach ($combinations["QB"] as $comboKey=>$QBCombo) {
+					foreach ($combinations["RB"] as $RBCombo) {
+						foreach ($combinations["WR"] as $WRCombo) {
+							foreach ($combinations["TE"] as $TECombo) {
+								foreach ($combinations["DST"] as $DSTCombo) {
+									$comboCount+=1;
+									$totalCost = 0;
+									$potentialPoints = 0;
+									$QBnames="";
+									$QBid="";
+									$QBteam = "";//TODO if no receivers match QB team, then continue;
+									foreach ($QBCombo as $key=>$QB) {
+										$totalCost+=$QB->salary;
+										$potentialPoints += $QB->ppg;
+										$QBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$QB->id.'">'.$QB->name."</span><br>";
+										$QBid.=$QB->id.",";
+										$QBteam = $QB->team;
+									}
+									$RBnames="";
+									$RBid="";
+									foreach ($RBCombo as $key=>$RB) {
+										if($RB->team==$QBteam){
+											$RBnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}else{
+											$RBnames.='<span class="player" data-id="'.$RB->id.'">'.$RB->name."</span><br>";
+										}
+										$totalCost+=$RB->salary;
+										$potentialPoints += $RB->ppg;
+										
+										$RBid.=$RB->id.",";
+									}
+									$WRnames="";
+									$WRid="";
+									foreach ($WRCombo as $key=>$WR) {
+										if($WR->team==$QBteam){
+											$WRnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}else{
+											$WRnames.='<span class="player" data-id="'.$WR->id.'">'.$WR->name."</span><br>";
+										}
+										$totalCost+=$WR->salary;
+										$potentialPoints += $WR->ppg;
+										$WRid.=$WR->id.",";
+									}
+									if($totalCost>50000){
+										continue;
+									}
+									$TEnames="";
+									$TEid="";
+									foreach ($TECombo as $key=>$TE) {
+										if($TE->team==$QBteam){
+											$TEnames.='<span class="player" style="color:'.$qbColors[$comboKey].'" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}else{
+											$TEnames.='<span class="player" data-id="'.$TE->id.'">'.$TE->name."</span><br>";
+										}
+										$totalCost+=$TE->salary;
+										$potentialPoints += $TE->ppg;
+										$TEid.=$TE->id.",";
+									}
+									if($totalCost>50000){
+										continue;
+									}
+									$DSTnames="";
+									$DSTid="";
+									foreach ($DSTCombo as $key=>$DST) {
+										$totalCost+=$DST->salary;
+										$potentialPoints += $DST->ppg;
+										$DSTnames.='<span class="player" data-id="'.$DST->id.'">'.$DST->name."</span><br>";
+										$DSTid.=$DST->id.",";
+									}
+									if($totalCost<=50000){
+										$totalCombinations+=1;
+										$html.='<div class="lineup" data-inuse="false">
+															<div class="index">'.$comboCount.'</div>
+															<div class="move"><span class="toggle-lineup">ADD</span></div>
+															<div class="salary">'.$totalCost.'</div>
+															<div class="points">'.$potentialPoints.'</div>
+															<div class="qbs">'.rtrim($QBnames, ",").'</div>
+															<div class="rbs">'.rtrim($RBnames, ",").'</div>
+															<div class="wrs">'.rtrim($WRnames, ",").'</div>
+															<div class="tes">'.rtrim($TEnames, ",").'</div>
+															<div class="dst">'.rtrim($DSTnames, ",").'</div>
+														</div>';
+										$output.=$totalCost.",".$potentialPoints.",".rtrim($QBid, ",").",".rtrim($RBid, ",").",".rtrim($WRid, ",").",".rtrim($TEid, ",").",".rtrim($DSTid, ",")."\n";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 			$html .= "	<div>
 								</section>";
 

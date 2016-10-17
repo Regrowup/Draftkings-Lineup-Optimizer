@@ -61,12 +61,24 @@ body {
 header {
      background-color: #368C00;
      margin:0;
+     z-index:1;
+     position: fixed;
+     top:0;
+     left:0;
+     width:100% !important;
+     box-shadow: 0 0 5px #f2f2f2;
 }
 header h1{
      color:#f2f2f2;
      padding:20px;
 }
-
+header div{
+     float: right;
+    color: white;
+    font-size: 22px;
+    padding: 20px;
+    margin-right: 70px;
+}
 h2{
      margin-bottom:20px;
 }
@@ -157,6 +169,7 @@ section{
 .build-csv{
      padding:15px;
      text-align: center;
+     margin:5px;
 }
 .build-csv input{
      text-align: center;
@@ -173,7 +186,7 @@ section{
     border-radius: 5px;
     cursor: pointer;
     background: orange;
-    color: #f2f2f2;
+    color: white;
 }
 .sort-fields{
      margin-bottom:10px;
